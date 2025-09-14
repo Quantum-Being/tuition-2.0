@@ -18,6 +18,7 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
+            opacity: 0.7;
         }
         input { margin: 10px 0; padding: 8px; width: 100%; }
         button { padding: 10px 20px; cursor: pointer; }
@@ -30,12 +31,12 @@
         background-position: center; /* keep it centered */
         background-repeat: no-repeat;/* don’t repeat the image */
         }
-    </style>h
+    </style>
 </head>
 <body>
     <div class="card">
         <h2>Welcome to Tuition 2.0</h2>
-        <form>
+        <form action="/authorisation" mrthod="POST">
             <input type="text" placeholder="Username" required><br>
             <input type="password" placeholder="Password" required><br>
             <button type="submit">Sign In</button>
