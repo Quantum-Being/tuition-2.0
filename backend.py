@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route("/authorisation")
+@app.route("/authorisation", methods=["POST"])
 def authorisation():
     un = request.form["username"]
     p = request.form["password"]
