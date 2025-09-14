@@ -6,5 +6,10 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
+@app.route("/authorisation")
+def authorisation():
+    un = request.form["username"]
+    p = request.form["password"]
+
 if __name__ == "__main__":
     app.run(debug=True)
