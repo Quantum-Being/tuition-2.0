@@ -6,11 +6,16 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .card {
             background: white;
@@ -18,35 +23,38 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
-            opacity: 0.7;
+            opacity: 0.85; /* transparency */
         }
-        input { margin: 10px 0; padding: 8px; width: 100%; }
-        button { padding: 10px 20px; cursor: pointer; }
-        button:hover { background-color:#2CFF05; }
-        body {
-        margin: 0;  /* remove white gaps */
-        padding: 0;
-        height: 100vh; /* full viewport height */
-        background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg");
-        background-size: cover;      /* scale image to cover whole page */
-        background-position: center; /* keep it centered */
-        background-repeat: no-repeat;/* don’t repeat the image */
+        input { 
+            margin: 10px 0; 
+            padding: 8px; 
+            width: 100%; 
+        }
+        button { 
+            padding: 10px 20px; 
+            cursor: pointer; 
+        }
+        button:hover { 
+            background-color: #2CFF05; 
         }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>Welcome to Tuition 2.0</h2>
-        <form action="/authorisation" mrthod="POST">
-            <input type="text" placeholder="Username" required><br>
-            <input type="password" placeholder="Password" required><br>
+        <form action="/authorisation" method="POST">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
             <button type="submit">Sign In</button>
         </form>
+
         <script>
-            var x == {{x}}
-            if ( x == 1):
+            var x = {{ x | default(0) }};
+            if (x === 1) {
                 alert("Either username or password is incorrect! Please verify username and password and try again.");
+            }
         </script>
+
         <p><a href="#">Create New Account</a></p>
     </div>
 </body>
