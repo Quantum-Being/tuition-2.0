@@ -1,1 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tuition 2.0 - Sign Up</title>
+    <link rel="icon" type="image/png" href="https://images.hdqwalls.com/wallpapers/black-hole-dark-4k-wo.jpg">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; height: 100vh; display: flex; justify-content: center; align-items: center; background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg"); background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 0 15px rgba(0,0,0,0.2); text-align: center; opacity: 0.85; }
+        input { margin: 10px 0; padding: 8px; width: 100%; }
+        button { padding: 10px 20px; cursor: pointer; }
+        button:hover { background-color: #2CFF05; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Create New Account</h2>
+        <form action="/onboarding" method="POST">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="text" name="invite_key" placeholder="Invite Key" required><br>
+            <button type="submit">Sign Up</button>
+        </form>
+        <script>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            alert("{{ messages[0] }}");
+          {% endif %}
+        {% endwith %}
+        </script>
+        <p><a href="{{ url_for('home') }}">Back to Sign In</a></p>
+    </div>
+</body>
+</html>
 
