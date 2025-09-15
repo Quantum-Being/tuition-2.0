@@ -28,9 +28,9 @@ def home():
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
             return render_template("cotwo.html")
 
-        # Check database users
-        user = User.query.filter_by(username=un, password=p, email_verified=True).first()
-        if user:
+        # Database users
+        user = User.query.filter_by(username=un, email_verified=True).first()
+        if user and check_password_hash(user.password, p):
             return render_template("user_dashboard.html", username=un)
         else:
             flash("Either username or password is incorrect! Please try again.")
@@ -54,7 +54,8 @@ def signup():
             flash("Username already exists!")
             return redirect(url_for("signup"))
 
-        new_user = User(username=username, password=password, invite_key=invite_key, email_verified=True)
+        hashed_pw = generate_password_hash(password)
+        new_user = User(username=username, password=hashed_pw, invite_key=invite_key, email_verified=True)
         db.session.add(new_user)
         db.session.commit()
         flash("Account created successfully! You can now sign in.")
