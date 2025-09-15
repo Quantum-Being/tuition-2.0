@@ -12,10 +12,10 @@ def authorisation():
     un = request.form.get("username", "")
     p = request.form.get("password", "")
 
-    if un == "Co-Owner-One" and p == os.getenv("COOWNER_ONE_PASS"):
+    if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
         return render_template("coone.html")
 
-    elif un == "Co-Owner-Two" and p == os.getenv("COOWNER_TWO_PASS"):
+    elif un == os.getnev("NISHA") and p == os.getenv("COOWNER_2"):
         return render_template("cotwo.html")
         
     else:
