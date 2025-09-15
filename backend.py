@@ -13,9 +13,10 @@ def authorisation():
     if un == "Co-Owner-One":
         if p == "Quantum-Space":
             return render_template("coone.html")
-            return ("home.html", x = 0)
+            return render_template("home.html", x=0)
+
     else:
-        return ("home.html", x = 1)
+        return render_template("home.html", x=1)
 
 if __name__ == "__main__":
     app.run(debug=True)
