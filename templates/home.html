@@ -23,20 +23,11 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
-            opacity: 0.85; /* transparency */
+            opacity: 0.85;
         }
-        input { 
-            margin: 10px 0; 
-            padding: 8px; 
-            width: 100%; 
-        }
-        button { 
-            padding: 10px 20px; 
-            cursor: pointer; 
-        }
-        button:hover { 
-            background-color: #2CFF05; 
-        }
+        input { margin: 10px 0; padding: 8px; width: 100%; }
+        button { padding: 10px 20px; cursor: pointer; }
+        button:hover { background-color: #2CFF05; }
     </style>
 </head>
 <body>
@@ -48,12 +39,11 @@
             <button type="submit">Sign In</button>
         </form>
 
+        {% if error == 1 %}
         <script>
-            var x = {{ x | default(0) }};
-            if (x === 1) {
-                alert("Either username or password is incorrect! Please verify username and password and try again.");
-            }
+            alert("Either username or password is incorrect! Please verify and try again.");
         </script>
+        {% endif %}
 
         <p><a href="#">Create New Account</a></p>
     </div>
