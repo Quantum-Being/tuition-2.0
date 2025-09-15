@@ -35,18 +35,17 @@
 <body>
     <div class="card">
         <h2>Welcome to Tuition 2.0</h2>
-        <form action="/authorisation" method="POST">
+        <form action="/CoOwners" method="POST">
             <input type="text" name="username" placeholder="Username" required><br>
             <input type="password" name="password" placeholder="Password" required><br>
             <button type="submit">Sign In</button>
         </form>
-
-        {% if error == 1 %}
         <script>
-            alert("Either username or password is incorrect! Please verify and try again.");
+        var error = {{ error | default(0) }};
+        if (error === 1) {
+        alert("Either username or password is incorrect! Please try again.");
+        }
         </script>
-        {% endif %}
-
         <p><a href="#">Create New Account</a></p>
     </div>
 </body>
