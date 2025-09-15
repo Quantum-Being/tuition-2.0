@@ -10,6 +10,12 @@ def home():
 def authorisation():
     un = request.form["username"]
     p = request.form["password"]
+    if un == "Co-Owner-One":
+        if p == "Quantum-Space":
+            return render_template("coone.html")
+            return ("home.html", x = 0)
+    else:
+        return ("home.html", x = 1)
 
 if __name__ == "__main__":
     app.run(debug=True)
