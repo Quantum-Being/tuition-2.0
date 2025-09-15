@@ -4,18 +4,20 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def home():
-    # No x=0 default. Just render login form cleanly.
     return render_template("home.html")
 
-@app.route("/authorisation", methods=["POST"])
+@app.route("/CoOwners", methods=["POST"])
 def authorisation():
     un = request.form.get("username", "")
     p = request.form.get("password", "")
 
     if un == "Co-Owner-One" and p == "Quantum-Space":
         return render_template("coone.html")
+
+    elif un == "Co-Owner-Two" and p == "AayushAayra":
+        return render_template("cotwo.html")
+        
     else:
-        # Redirect back to home but with query string ?error=1
         return redirect(url_for("home_error"))
 
 @app.route("/error", methods=["GET"])
