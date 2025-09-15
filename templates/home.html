@@ -26,27 +26,6 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
             opacity: 0.85;
+            width: 320px;
         }
-        input { margin: 10px 0; padding: 8px; width: 100%; }
-        button { padding: 10px 20px; cursor: pointer; }
-        button:hover { background-color: #2CFF05; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h2>Welcome to Tuition 2.0</h2>
-        <form action="/CoOwners" method="POST">
-            <input type="text" name="username" placeholder="Username" required><br>
-            <input type="password" name="password" placeholder="Password" required><br>
-            <button type="submit">Sign In</button>
-        </form>
-        <script>
-        var error = {{ error | default(0) }};
-        if (error === 1) {
-        alert("Either username or password is incorrect! Please try again.");
-        }
-        </script>
-        <p><a href="#">Create New Account</a></p>
-    </div>
-</body>
-</html>
+        input { margin: 
