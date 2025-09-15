@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tuition 2.0</title>
+    <title>Tuition 2.0 - Signup</title>
     <link rel="icon" type="image/png" href="https://images.hdqwalls.com/wallpapers/black-hole-dark-4k-wo.jpg">
     <style>
         body {
@@ -18,10 +18,6 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-        .container {
-            display: flex;
-            gap: 30px;
-        }
         .card {
             background: white;
             padding: 30px;
@@ -29,7 +25,6 @@
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
             opacity: 0.85;
-            width: 300px;
         }
         input {
             margin: 10px 0;
@@ -46,36 +41,23 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="card">
+        <h2>Create a New Account</h2>
+        <form action="/signup" method="POST">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="text" name="invite_key" placeholder="Invite Key" required><br>
+            <button type="submit">Sign Up</button>
+        </form>
 
-        <!-- Sign In Card -->
-        <div class="card">
-            <h2>Sign In</h2>
-            <form action="/CoOwners" method="POST">
-                <input type="text" name="username" placeholder="Username" required><br>
-                <input type="password" name="password" placeholder="Password" required><br>
-                <button type="submit">Sign In</button>
-            </form>
-            <script>
-                var error = {{ error | default(0) }};
-                if (error === 1) {
-                    alert("Either username or password is incorrect! Please try again.");
-                }
-            </script>
-        </div>
+        {% if error %}
+        <script>
+            alert("{{ error }}");
+        </script>
+        {% endif %}
 
-        <!-- Create Account Card -->
-        <div class="card">
-            <h2>Create Account</h2>
-            <form action="/signup" method="POST">
-                <input type="text" name="username" placeholder="New Username" required><br>
-                <input type="email" name="email" placeholder="Email Address" required><br>
-                <input type="password" name="password" placeholder="New Password" required><br>
-                <input type="text" name="invite_key" placeholder="Invite Key" required><br>
-                <button type="submit">Register</button>
-            </form>
-        </div>
-
+        <p><a href="/">Back to Login</a></p>
     </div>
 </body>
 </html>
