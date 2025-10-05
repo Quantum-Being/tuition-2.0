@@ -1,26 +1,23 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import requests
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-# New: SheetDB API URL environment variable
+# SheetDB API URL
 SHEET_API_URL = os.getenv("SHEET_API_URL")
 
 # Helper functions
 def get_all_users():
-    """Fetch all users from Google Sheet."""
     res = requests.get(SHEET_API_URL)
     if res.status_code == 200:
-        return res.json()  # List of dicts
+        return res.json()
     return []
 
 def add_user(user_data):
-    """Add new user to Google Sheet."""
     res = requests.post(SHEET_API_URL, json={"data": user_data})
-    return res.status_code == 201 or res.status_code == 200
+    return res.status_code in [200, 201]
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -34,10 +31,10 @@ def home():
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
             return render_template("cotwo.html")
 
-        # SheetDB users
+        # Check users from SheetDB
         users = get_all_users()
-        user = next((u for u in users if u["username"] == un and u["email_verified"] == "True"), None)
-        if user and check_password_hash(user["password"], p):
+        user = next((u for u in users if u["username"] == un and u["password"] == p), None)
+        if user:
             return render_template("user_dashboard.html", username=un)
         else:
             flash("Either username or password is incorrect! Please try again.")
@@ -61,12 +58,9 @@ def signup():
             flash("Username already exists!")
             return redirect(url_for("signup"))
 
-        hashed_pw = generate_password_hash(password)
         new_user = {
             "username": username,
-            "password": hashed_pw,
-            "invite_key": invite_key,
-            "email_verified": "True"
+            "password": password
         }
         if add_user(new_user):
             flash("Account created successfully! You can now sign in.")
