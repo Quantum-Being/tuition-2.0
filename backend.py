@@ -1,20 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import requests
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
-    invite_key = db.Column(db.String(150), nullable=False)
-    email_verified = db.Column(db.Boolean, default=False)
+# New: SheetDB API URL environment variable
+SHEET_API_URL = os.getenv("SHEET_API_URL")
+
+# Helper functions
+def get_all_users():
+    """Fetch all users from Google Sheet."""
+    res = requests.get(SHEET_API_URL)
+    if res.status_code == 200:
+        return res.json()  # List of dicts
+    return []
+
+def add_user(user_data):
+    """Add new user to Google Sheet."""
+    res = requests.post(SHEET_API_URL, json={"data": user_data})
+    return res.status_code == 201 or res.status_code == 200
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -28,9 +34,10 @@ def home():
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
             return render_template("cotwo.html")
 
-        # Database users
-        user = User.query.filter_by(username=un, email_verified=True).first()
-        if user and check_password_hash(user.password, p):
+        # SheetDB users
+        users = get_all_users()
+        user = next((u for u in users if u["username"] == un and u["email_verified"] == "True"), None)
+        if user and check_password_hash(user["password"], p):
             return render_template("user_dashboard.html", username=un)
         else:
             flash("Either username or password is incorrect! Please try again.")
@@ -49,17 +56,24 @@ def signup():
             flash("Invalid invite key!")
             return redirect(url_for("signup"))
 
-        existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
+        users = get_all_users()
+        if any(u["username"] == username for u in users):
             flash("Username already exists!")
             return redirect(url_for("signup"))
 
         hashed_pw = generate_password_hash(password)
-        new_user = User(username=username, password=hashed_pw, invite_key=invite_key, email_verified=True)
-        db.session.add(new_user)
-        db.session.commit()
-        flash("Account created successfully! You can now sign in.")
-        return redirect(url_for("home"))
+        new_user = {
+            "username": username,
+            "password": hashed_pw,
+            "invite_key": invite_key,
+            "email_verified": "True"
+        }
+        if add_user(new_user):
+            flash("Account created successfully! You can now sign in.")
+            return redirect(url_for("home"))
+        else:
+            flash("Error adding user. Try again later.")
+            return redirect(url_for("signup"))
 
     return render_template("signup.html")
 
