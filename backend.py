@@ -4,7 +4,7 @@ import requests, os
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 
-SHEETDB_URL = "https://sheetdb.io/api/v1/fa2lss1f8h2sd"
+SHEETDB_URL = os.getenv("SHEET_API_URL", "https://sheetdb.io/api/v1/fa2lss1f8h2sd")
 
 # -------------------------------------------------------------------
 # Helper functions
@@ -44,9 +44,9 @@ def home():
 
         # Co-owners (admins)
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
-            return render_template("coone.html")
+            return render_template("coone.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html")
+            return render_template("cotwo.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
 
         # Normal users
         users = get_all_users()
@@ -83,6 +83,33 @@ def signup():
         return redirect(url_for("home"))
 
 
-@app.route("/ivgstd", methods=["POST"])
+@app.route("/ivgstd", methods=["GET", "POST"])
 def investigation():
-    username = request.form.get("username", "").strip
+    student = None
+    searched = False
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        student_id = request.form.get("student_id", "").strip()
+
+        try:
+            res = requests.get(SHEETDB_URL)
+            if res.status_code == 200:
+                data = res.json()
+                for u in data:
+                    if u.get("username") == username or u.get("student_id") == student_id:
+                        student = u
+                        break
+                searched = True
+        except Exception as e:
+            print("Error reading Google Sheets:", e)
+
+    return render_template("isd.html", student=student, searched=searched)
+
+
+# -------------------------------------------------------------------
+# Run app
+# -------------------------------------------------------------------
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
