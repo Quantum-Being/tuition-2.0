@@ -38,7 +38,7 @@ def home():
         if user:
             return render_template("user_dashboard.html", username=un)
         else:
-            flash("Either username or password is incorrect! Please try again.")
+            flash("Either username or password is incorrect! Please try again.", sheet_url=os.getenv("SHEET_API_URL"))
             return redirect(url_for("home"))
 
     return render_template("signin.html")
