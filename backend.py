@@ -1,9 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import gspread
-import os
+import os, gspread
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
+app.secret_key = os.getenv("SECRET_KEY", "temporary-secret")  # optional fallback
 
 
 # -------------------------------------------------------------------
@@ -33,14 +32,13 @@ def add_user(user_data):
 # -------------------------------------------------------------------
 # ROUTES
 # -------------------------------------------------------------------
-
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
         un = request.form.get("username", "")
         p = request.form.get("password", "")
 
-        # Hardcoded co-owners (Admins)
+        # Co-owners (admins)
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
             return render_template("coone.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
@@ -49,6 +47,7 @@ def home():
         # Regular user validation
         users = get_all_users()
         user = next((u for u in users if u.get("username") == un and u.get("password") == p), None)
+
         if user:
             return render_template("user_dashboard.html", username=un)
         else:
@@ -70,47 +69,31 @@ def signup():
 
     users = get_all_users()
 
-    # Prevent duplicate username
     if any(u.get("username") == username for u in users):
-        flash("Username already exists!")
+        flash("Username already exists! Please choose another one.")
         return redirect(url_for("home"))
-
-    # Add to Google Sheets
-    user_data = {"username": username, "password": password}
-    add_user(user_data)
-    flash("Account created successfully!")
-    return redirect(url_for("home"))
-
-
-@app.route("/user_dashboard", methods=["POST"])
-def user_dashboard():
-    username = request.form.get("username")
-    if not username:
-        flash("Unauthorized access.")
+    else:
+        add_user({"username": username, "password": password})
+        flash("Account created successfully! Please sign in.")
         return redirect(url_for("home"))
-    return render_template("user_dashboard.html", username=username)
 
 
 @app.route("/ivgstd", methods=["POST"])
 def investigation():
-    student = None
-    searched = False
-
     username = request.form.get("username", "").strip()
     student_id = request.form.get("student_id", "").strip()
-
     users = get_all_users()
 
-    if any(u.get("username") == username for u in users):
-        student = next((u for u in users if u["username"] == username), None)
-    elif any(str(u.get("student_id")) == str(student_id) for u in users):
-        student = next((u for u in users if str(u["student_id"]) == str(student_id)), None)
-    else:
-        student = None
+    student = next(
+        (u for u in users if u.get("username") == username or str(u.get("student_id")) == student_id),
+        None
+    )
 
-    searched = True
-    return render_template("isd.html", student=student, searched=searched)
+    return render_template("isd.html", student=student, searched=True)
 
 
+# -------------------------------------------------------------------
+# ENTRY POINT
+# -------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
