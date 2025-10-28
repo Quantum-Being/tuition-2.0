@@ -1,12 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
-import os
+from flask import Flask, render_template, request, redirect, url_for, flash
 import gspread
+import os
 
 app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "dev_secret")
+app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
+
 
 # -------------------------------------------------------------------
-# GOOGLE SHEETS CONNECTION
+# GOOGLE SHEETS HELPERS
 # -------------------------------------------------------------------
 def get_all_users():
     try:
@@ -16,6 +17,7 @@ def get_all_users():
     except Exception as e:
         print("Error reading Google Sheets:", e)
         return []
+
 
 def add_user(user_data):
     try:
@@ -67,4 +69,48 @@ def signup():
         return redirect(url_for("home"))
 
     users = get_all_users()
+
+    # Prevent duplicate username
     if any(u.get("username") == username for u in users):
+        flash("Username already exists!")
+        return redirect(url_for("home"))
+
+    # Add to Google Sheets
+    user_data = {"username": username, "password": password}
+    add_user(user_data)
+    flash("Account created successfully!")
+    return redirect(url_for("home"))
+
+
+@app.route("/user_dashboard", methods=["POST"])
+def user_dashboard():
+    username = request.form.get("username")
+    if not username:
+        flash("Unauthorized access.")
+        return redirect(url_for("home"))
+    return render_template("user_dashboard.html", username=username)
+
+
+@app.route("/ivgstd", methods=["POST"])
+def investigation():
+    student = None
+    searched = False
+
+    username = request.form.get("username", "").strip()
+    student_id = request.form.get("student_id", "").strip()
+
+    users = get_all_users()
+
+    if any(u.get("username") == username for u in users):
+        student = next((u for u in users if u["username"] == username), None)
+    elif any(str(u.get("student_id")) == str(student_id) for u in users):
+        student = next((u for u in users if str(u["student_id"]) == str(student_id)), None)
+    else:
+        student = None
+
+    searched = True
+    return render_template("isd.html", student=student, searched=searched)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
