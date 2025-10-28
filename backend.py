@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 import os
 import requests
 
@@ -16,7 +16,8 @@ def get_all_users():
     return []
 
 def add_user(user_data):
-    res = requests.post(SHEET_API_URL, json={"data": user_data})
+    # ✅ Fixed: SheetDB requires list inside "data"
+    res = requests.post(SHEET_API_URL, json={"data": [user_data]})
     return res.status_code in [200, 201]
 
 @app.route("/", methods=["GET", "POST"])
@@ -55,13 +56,14 @@ def signup():
 
         users = get_all_users()
         if any(u["username"] == username for u in users):
-            flash("Username already exists!")
+            flash("Username already exists! Please choose another one.")
             return redirect(url_for("signup"))
 
         new_user = {
             "username": username,
             "password": password
         }
+
         if add_user(new_user):
             flash("Account created successfully! You can now sign in.")
             return redirect(url_for("home"))
@@ -70,6 +72,11 @@ def signup():
             return redirect(url_for("signup"))
 
     return render_template("signup.html")
+
+# 🧠 Optional: Quick debug route (can remove in production)
+@app.route("/api/users", methods=["GET"])
+def show_users():
+    return jsonify(get_all_users())
 
 if __name__ == "__main__":
     app.run(debug=True)
