@@ -74,10 +74,6 @@ def signup():
 def show_users():
     return jsonify(get_all_users())
 
-@app.route("/ivgstd", methods=[GET])
-def investigation():
-    return render_template("isd.html")
-
 @app.route("/ivgstd", methods=["GET", "POST"])
 def investigation():
     if request.method == "POST":
