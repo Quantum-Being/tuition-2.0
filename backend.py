@@ -16,7 +16,6 @@ def get_all_users():
     return []
 
 def add_user(user_data):
-    # ✅ Fixed: SheetDB requires list inside "data"
     res = requests.post(SHEET_API_URL, json={"data": [user_data]})
     return res.status_code in [200, 201]
 
@@ -28,9 +27,9 @@ def home():
 
         # Hardcoded co-owners
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
-            return render_template("coone.html")
+            return render_template("coone.html", sheet_url=SHEET_API_URL)
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html", sheet_url=os.getenv("SHEET_API_URL"))
+            return render_template("cotwo.html", sheet_url=SHEET_API_URL)
 
         # Check users from SheetDB
         users = get_all_users()
@@ -59,10 +58,7 @@ def signup():
             flash("Username already exists! Please choose another one.")
             return redirect(url_for("signup"))
 
-        new_user = {
-            "username": username,
-            "password": password
-        }
+        new_user = {"username": username, "password": password}
 
         if add_user(new_user):
             flash("Account created successfully! You can now sign in.")
@@ -73,7 +69,6 @@ def signup():
 
     return render_template("signup.html")
 
-# 🧠 Optional: Quick debug route (can remove in production)
 @app.route("/api/users", methods=["GET"])
 def show_users():
     return jsonify(get_all_users())
