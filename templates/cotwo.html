@@ -7,12 +7,17 @@
 
     <style>
         body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
             font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
         }
         .card {
             background: white;
@@ -20,26 +25,27 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
-            opacity: 0.7;
+            opacity: 0.8;
         }
-        body {
-        margin: 0;  /* remove white gaps */
-        padding: 0;
-        height: 100vh; /* full viewport height */
-        background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg");
-        background-size: cover;      /* scale image to cover whole page */
-        background-position: center; /* keep it centered */
-        background-repeat: no-repeat;/* don’t repeat the image */
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #222;
+            color: white;
         }
-        button { margin-top: 20px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; background-color: #222; color: white; }
-        button:hover { background-color: #555; }
+        button:hover {
+            background-color: #555;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-      <h1><b>Welcome to the admin console, Mrs. Nisha Jha.</b></h1>
-        <a href={{SHEET_API_URL}}>
-        <button>Manage Students</button>
+        <h1><b>Welcome to the admin console, Mrs. Nisha Jha.</b></h1>
+        <a href="{{ google_sheet_api_url }}" target="_blank">
+            <button>Manage Students</button>
         </a>
     </div>
 </body>
