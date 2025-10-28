@@ -5,8 +5,9 @@ import requests
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY")
 
-# SheetDB API URL
+# Environment variables
 SHEET_API_URL = os.getenv("SHEET_API_URL")
+GOOGLE_SHEET_API_URL = os.getenv("GOOGLE_SHEET_API_URL")
 
 # Helper functions
 def get_all_users():
@@ -27,9 +28,9 @@ def home():
 
         # Hardcoded co-owners
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
-            return render_template("coone.html", GOOGLE_SHEET_API_URL=os.getenv("GOOGLE_SHEET_API_URL"))
+            return render_template("coone.html", google_sheet_api_url=GOOGLE_SHEET_API_URL)
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html", GOOGLE_SHEET_API_URL=os.getenv("GOOGLE_SHEET_API_URL"))
+            return render_template("cotwo.html", google_sheet_api_url=GOOGLE_SHEET_API_URL)
 
         # Check users from SheetDB
         users = get_all_users()
