@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Tuition 2.0</title>
     <link rel="icon" type="image/png" href="https://images.hdqwalls.com/wallpapers/black-hole-dark-4k-wo.jpg">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,11 +31,16 @@
         background-position: center; /* keep it centered */
         background-repeat: no-repeat;/* don’t repeat the image */
         }
+        button { margin-top: 20px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; background-color: #222; color: white; }
+        button:hover { background-color: #555; }
     </style>
 </head>
 <body>
     <div class="card">
-      <h1><b>Welcome, Mr. Aayush Jha.</b></h1>
+      <h1><b>Welcome to the admin console, Mr. Aayush Jha.</b></h1>
+        <a href={{SHEET_API_URL}}>
+        <button>Manage Students</button>
+        </a>
     </div>
 </body>
 </html>
