@@ -75,19 +75,28 @@ def show_users():
     return jsonify(get_all_users())
 
 @app.route("/ivgstd", methods=["GET", "POST"])
-def ivgstd():
+def investigation():
+    student = None
+    searched = False
+
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         student_id = request.form.get("student_id", "").strip()
 
-        users = get_all_users()
-        for u in users:
-            if (username and u.get("username") == username) or (student_id and u.get("student_id") == student_id):
-                return render_template("student_details.html", student=u)
+        # Fetch all students from SheetDB
+        students = get_all_users()
 
-        return render_template("isd.html", searched=True)
+        # Search by username or student_id
+        for s in students:
+            if (username and s.get("username", "").lower() == username.lower()) or \
+               (student_id and s.get("student_id", "") == student_id):
+                student = s
+                break
 
-    return render_template("isd.html")
+        searched = True  # So template knows a search happened
+
+    return render_template("isd.html", student=student, searched=searched)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
