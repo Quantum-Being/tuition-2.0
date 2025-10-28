@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import os
+import os, gspread
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "temporary-secret")  # optional fallback
