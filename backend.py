@@ -75,7 +75,7 @@ def show_users():
     return jsonify(get_all_users())
 
 @app.route("/ivgstd", methods=["POST"])
-def investigation():
+def ivgstd():
     student = None
     searched = False
 
