@@ -1,9 +1,26 @@
-<!DOCKTYPE HTML>
-<html>
-  <head>
-    <title>Trial 1</title>
-  </head>
-  <body>
-    
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - {{ username }}</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding-top: 100px; background-color: #f2f2f2; }
+    h1 { color: #333; }
+    button { margin-top: 20px; padding: 10px 20px; cursor: pointer; border: none; border-radius: 8px; background-color: #222; color: white; }
+    button:hover { background-color: #555; }
+  </style>
+</head>
+<body>
+  <h1>Welcome, {{ username }} 👋</h1>
+
+  <p>Your account details are stored securely in the database.</p>
+
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    function logout() {
+      window.location.href = "/";
+    }
+  </script>
+</body>
 </html>
