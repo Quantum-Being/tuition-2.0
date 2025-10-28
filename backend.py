@@ -27,9 +27,9 @@ def home():
 
         # Hardcoded co-owners
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
-            return render_template("coone.html", sheet_url=SHEET_API_URL)
+            return render_template("coone.html", sheet_url=os.getenv("SHEET_API_URL"))
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html", sheet_url=SHEET_API_URL)
+            return render_template("cotwo.html", sheet_url=os.getenv("SHEET_API_URL"))
 
         # Check users from SheetDB
         users = get_all_users()
