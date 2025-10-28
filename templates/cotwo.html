@@ -47,7 +47,7 @@
         <a href="{{ google_sheet_api_url }}" target="_blank">
             <button>Manage Students</button>
         </a>
-        <form>
+        <form action="{{ url_for('ivgstd') }}" method="get">
             <button>Investigate Student Details</button>
         </form>
     </div>
