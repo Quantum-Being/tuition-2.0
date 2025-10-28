@@ -75,7 +75,7 @@ def show_users():
     return jsonify(get_all_users())
 
 @app.route("/ivgstd", methods=["GET", "POST"])
-def investigation():
+def ivgstd():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         student_id = request.form.get("student_id", "").strip()
