@@ -30,7 +30,7 @@ def home():
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
             return render_template("coone.html")
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html")
+            return render_template("cotwo.html", sheet_url=os.getenv("SHEET_API_URL"))
 
         # Check users from SheetDB
         users = get_all_users()
@@ -38,7 +38,7 @@ def home():
         if user:
             return render_template("user_dashboard.html", username=un)
         else:
-            flash("Either username or password is incorrect! Please try again.", sheet_url=os.getenv("SHEET_API_URL"))
+            flash("Either username or password is incorrect! Please try again.")
             return redirect(url_for("home"))
 
     return render_template("signin.html")
