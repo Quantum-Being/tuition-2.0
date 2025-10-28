@@ -59,6 +59,7 @@ def home():
 
     return render_template("signin.html")
 
+
 @app.route("/onboarding", methods=["POST"])
 def signup():
     username = request.form.get("username", "").strip()
@@ -81,4 +82,7 @@ def signup():
         flash("Error adding user. Try again later.")
         return redirect(url_for("home"))
 
-@app
+
+@app.route("/ivgstd", methods=["POST"])
+def investigation():
+    username = request.form.get("username", "").strip
