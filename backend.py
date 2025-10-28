@@ -78,5 +78,20 @@ def show_users():
 def investigation():
     return render_template("isd.html")
 
+@app.route("/ivgstd", methods=["GET", "POST"])
+def investigation():
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        student_id = request.form.get("student_id", "").strip()
+
+        users = get_all_users()
+        for u in users:
+            if (username and u.get("username") == username) or (student_id and u.get("student_id") == student_id):
+                return render_template("student_details.html", student=u)
+
+        return render_template("isd.html", searched=True)
+
+    return render_template("isd.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
