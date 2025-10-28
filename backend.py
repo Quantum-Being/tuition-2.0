@@ -20,7 +20,7 @@ def add_user(user_data):
     res = requests.post(SHEET_API_URL, json={"data": [user_data]})
     return res.status_code in [200, 201]
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/", methods=["POST"])
 def home():
     if request.method == "POST":
         un = request.form.get("username", "")
@@ -43,7 +43,7 @@ def home():
 
     return render_template("signin.html")
 
-@app.route("/onboarding", methods=["GET", "POST"])
+@app.route("/onboarding", methods=["POST"])
 def signup():
     if request.method == "POST":
         username = request.form.get("username")
@@ -74,7 +74,7 @@ def signup():
 def show_users():
     return jsonify(get_all_users())
 
-@app.route("/ivgstd", methods=["GET", "POST"])
+@app.route("/ivgstd", methods=["POST"])
 def investigation():
     student = None
     searched = False
