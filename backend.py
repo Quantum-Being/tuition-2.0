@@ -1,28 +1,70 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+import os
+import gspread
 
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "dev_secret")
 
-# Dummy data — replace this with your database function
+# -------------------------------------------------------------------
+# GOOGLE SHEETS CONNECTION
+# -------------------------------------------------------------------
 def get_all_users():
-    return [
-        {"username": "aayush", "student_id": "101", "age": "13", "grade": "9"},
-        {"username": "yk", "student_id": "102", "age": "14", "grade": "9"}
-    ]
+    try:
+        gc = gspread.service_account(filename="service_account.json")
+        sheet = gc.open_by_key("1hSeoPx-AK8hVmvAO7SgiSTa602iwfayhFt2eEtJVySc").sheet1
+        return sheet.get_all_records()
+    except Exception as e:
+        print("Error reading Google Sheets:", e)
+        return []
 
-@app.route("/ivgstd", methods=["GET", "POST"])
-def investigation():
-    student = None
-    searched = False
+def add_user(user_data):
+    try:
+        gc = gspread.service_account(filename="service_account.json")
+        sheet = gc.open_by_key("1hSeoPx-AK8hVmvAO7SgiSTa602iwfayhFt2eEtJVySc").sheet1
+        sheet.append_row([user_data["username"], user_data["password"]])
+        return True
+    except Exception as e:
+        print("Error adding user:", e)
+        return False
 
+
+# -------------------------------------------------------------------
+# ROUTES
+# -------------------------------------------------------------------
+
+@app.route("/", methods=["GET", "POST"])
+def home():
     if request.method == "POST":
-        username = request.form.get("username", "").strip()
-        student_id = request.form.get("student_id", "").strip()
+        un = request.form.get("username", "")
+        p = request.form.get("password", "")
 
+        # Hardcoded co-owners (Admins)
+        if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
+            return render_template("coone.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
+        elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
+            return render_template("cotwo.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
+
+        # Regular user validation
         users = get_all_users()
-        student = next(
-            (u for u in users if u["username"] == username or u["student_id"] == student_id),
-            None
-        )
-        searched = True  # So Jinja knows to show “No match found” if nothing matched
+        user = next((u for u in users if u.get("username") == un and u.get("password") == p), None)
+        if user:
+            return render_template("user_dashboard.html", username=un)
+        else:
+            flash("Either username or password is incorrect! Please try again.")
+            return redirect(url_for("home"))
 
-    return render_template("isd.html", student=student, searched=searched)
+    return render_template("signin.html")
+
+
+@app.route("/onboarding", methods=["POST"])
+def signup():
+    username = request.form.get("username")
+    password = request.form.get("password")
+    invite_key = request.form.get("invite_key")
+
+    if invite_key != os.getenv("INVITE_KEY"):
+        flash("Invalid invite key!")
+        return redirect(url_for("home"))
+
+    users = get_all_users()
+    if any(u.get("username") == username for u in users):
