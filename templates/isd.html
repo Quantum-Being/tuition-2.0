@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Tuition 2.0</title>
+    <title>Investigate Student</title>
     <link rel="icon" type="image/png" href="https://images.hdqwalls.com/wallpapers/black-hole-dark-4k-wo.jpg">
-
     <style>
         body {
             margin: 0;
@@ -14,7 +13,6 @@
             background-image: url("https://scitechdaily.com/images/A-Colossal-Explosion-from-Supermassive-Black-Hole.jpg");
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,7 +23,8 @@
             border-radius: 15px;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
             text-align: center;
-            opacity: 0.8;
+            opacity: 0.9;
+            width: 600px;
         }
         button {
             margin-top: 20px;
@@ -39,16 +38,42 @@
         button:hover {
             background-color: #555;
         }
+        table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-      <form>
-      <h1 text-align: center>Input any one known student detail.</h1>
-        <p>Username: <input type="text"></p>
-        <p>Student Id: <input type="number"></p>
-        <button type="submit">Submit</button>
-      </form>
+        <h1>Investigate Student Details</h1>
+        <form method="post" action="{{ url_for('investigation') }}">
+            <p>Username: <input type="text" name="username"></p>
+            <p>Student ID: <input type="number" name="student_id"></p>
+            <button type="submit">Search</button>
+        </form>
+
+        {% if student %}
+        <h2>Student Data</h2>
+        <table>
+            {% for key, value in student.items() %}
+            <tr>
+                <th>{{ key }}</th>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% elif searched %}
+        <p><b>No matching student found.</b></p>
+        {% endif %}
     </div>
 </body>
 </html>
