@@ -44,9 +44,9 @@ def home():
 
         # Co-owners (admins)
         if un == os.getenv("AAYUSH") and p == os.getenv("COOWNER_1"):
-            return render_template("coone.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
+            return render_template("ownr.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"), JHA="Mrs. Nisha Jha")
         elif un == os.getenv("NISHA") and p == os.getenv("COOWNER_2"):
-            return render_template("cotwo.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"))
+            return render_template("ownr.html", google_sheet_api_url=os.getenv("GOOGLE_SHEET_API_URL"), JHA="Mr. Aayush Jha")
 
         # Normal users
         users = get_all_users()
@@ -84,7 +84,7 @@ def signup():
 
 
 @app.route("/ivgstd", methods=["GET", "POST"])
-def investigation():
+def ivgstd():
     student = None
     searched = False
 
@@ -102,7 +102,7 @@ def investigation():
                         break
                 searched = True
         except Exception as e:
-            print("Error reading Google Sheets:", e)
+            print("Error accessing account database:", e)
 
     return render_template("isd.html", student=student, searched=searched)
 
