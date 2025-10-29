@@ -91,13 +91,14 @@ def ivgstd():
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         student_id = request.form.get("student_id", "").strip()
+        number = request.form.get("number", "").strip()
 
         try:
             res = requests.get(SHEETDB_URL)
             if res.status_code == 200:
                 data = res.json()
                 for u in data:
-                    if u.get("username") == username or u.get("student_id") == student_id:
+                    if u.get("username") == username or u.get("student_id") == student_id or u.get("number") == number:
                         student = u
                         break
                 searched = True
