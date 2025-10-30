@@ -60,7 +60,7 @@ def home():
     return render_template("signin.html")
 
 
-@app.route("/onboarding", methods=["POST"])
+@app.route("/onboarding", methods=["GET", "POST"])
 def signup():
     username = request.form.get("username", "").strip()
     password = request.form.get("password", "").strip()
@@ -83,7 +83,7 @@ def signup():
         return redirect(url_for("home"))
 
 
-@app.route("/ivgstd", methods=["GET", "POST"])
+@app.route("/ivgstd", methods=["POST"])
 def ivgstd():
     student = None
     searched = False
