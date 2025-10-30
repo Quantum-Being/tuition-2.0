@@ -67,6 +67,11 @@
         button:hover {
             background-color: #555;
         }
+        document.addEventListener("contextmenu", e => e.preventDefault());
+        document.onkeydown = e => {
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())))
+        e.preventDefault();
+        };
     </style>
 </head>
 <body>
