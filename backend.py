@@ -10,6 +10,13 @@ SHEETDB_URL = os.getenv("SHEET_API_URL", "https://sheetdb.io/api/v1/fa2lss1f8h2s
 # Helper functions
 # -------------------------------------------------------------------
 
+@app.after_request
+def add_security_headers(resp):
+    resp.headers['X-Content-Type-Options'] = 'nosniff'
+    resp.headers['X-Frame-Options'] = 'DENY'
+    resp.headers['X-XSS-Protection'] = '1; mode=block'
+    return resp
+
 def get_all_users():
     try:
         res = requests.get(SHEETDB_URL)
